@@ -6,24 +6,27 @@ let productionDomains = [
 ];
 
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.sync.set({ productionDomains });
+    chrome.storage.sync.set({productionDomains});
     console.log('Setting default production domains');
 });
 
 //Change tab events
-chrome.tabs.onActivated.addListener(function(activeInfo) {
-    chrome.storage.sync.get("productionDomains", ({ productionDomains }) => {
-        chrome.tabs.query({ active: true, currentWindow: true }, ([currentTab]) => {
-            if(currentTab.url){
+chrome.tabs.onActivated.addListener(function (activeInfo) {
+    chrome.storage.sync.get("productionDomains", ({productionDomains}) => {
+        chrome.tabs.query({active: true, currentWindow: true}, ([currentTab]) => {
+            if (currentTab.url) {
                 var url = new URL(currentTab.url)
                 var domain = url.hostname
 
-                console.log(productionDomains, domain);
-
-                if(productionDomains.includes(domain)){
+                if (productionDomains.includes(domain)) {
                     chrome.scripting.executeScript({
-                        target: { tabId: currentTab.id },
+                        target: {tabId: currentTab.id},
                         function: productionWarning,
+                    });
+                } else {
+                    chrome.scripting.executeScript({
+                        target: {tabId: currentTab.id},
+                        function: removeProductionWarning,
                     });
                 }
             }
@@ -31,9 +34,18 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
     })
 });
 
+function removeProductionWarning() {
+    let exist = document.getElementById('warning-text-legito');
+    if (!exist) {
+        return;
+    }
+
+    exist.remove();
+}
+
 function productionWarning() {
     let exist = document.getElementById('warning-text-legito');
-    if(exist){
+    if (exist) {
         return;
     }
 
@@ -50,7 +62,7 @@ function productionWarning() {
     warningDiv.append(h1);
 
     let headerMenu = document.getElementById("header-menu");
-    if(headerMenu){
+    if (headerMenu) {
         headerMenu.append(warningDiv);
     } else {
         document.body.prepend(warningDiv);
