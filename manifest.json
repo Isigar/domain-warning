@@ -1,0 +1,22 @@
+{
+  "name": "Dont use production",
+  "description": "Dont use legito production for debugging!",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "legito.js"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://*/",
+    "https://*/"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
