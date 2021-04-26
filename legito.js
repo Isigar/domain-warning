@@ -17,6 +17,9 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
             if(currentTab.url){
                 var url = new URL(currentTab.url)
                 var domain = url.hostname
+
+                console.log(productionDomains, domain);
+
                 if(productionDomains.includes(domain)){
                     chrome.scripting.executeScript({
                         target: { tabId: currentTab.id },
@@ -47,6 +50,10 @@ function productionWarning() {
     warningDiv.append(h1);
 
     let headerMenu = document.getElementById("header-menu");
-    headerMenu.append(warningDiv);
+    if(headerMenu){
+        headerMenu.append(warningDiv);
+    } else {
+        document.body.prepend(warningDiv);
+    }
 }
 
