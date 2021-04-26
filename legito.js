@@ -11,7 +11,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 //Change tab events
-chrome.tabs.onActivated.addListener(function (activeInfo) {
+chrome.tabs.onUpdated.addListener(function (activeInfo) {
     chrome.storage.sync.get("productionDomains", ({productionDomains}) => {
         chrome.tabs.query({active: true, currentWindow: true}, ([currentTab]) => {
             if (currentTab.url) {
@@ -61,11 +61,6 @@ function productionWarning() {
 
     warningDiv.append(h1);
 
-    let headerMenu = document.getElementById("header-menu");
-    if (headerMenu) {
-        headerMenu.append(warningDiv);
-    } else {
-        document.body.prepend(warningDiv);
-    }
+    document.body.prepend(warningDiv);
 }
 
